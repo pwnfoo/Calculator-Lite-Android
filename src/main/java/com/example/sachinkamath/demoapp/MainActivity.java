@@ -15,13 +15,8 @@ public class MainActivity extends Activity {
 
     Button add,sub,mult,div,equ,n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,can;
     TextView tv,log;
-    int result=0,num1,num2,flag,lock=0,equilock=0;
+    int result=0,num1,num2,flag,lock=0,equilock=1,lockzero=0;
     String temp2;
-
-    protected void calculate(int option){
-
-
-    }
 
     protected void calculate(int t1, int t2, int f)
     {
@@ -50,20 +45,26 @@ public class MainActivity extends Activity {
                 equilock=1;
                 break;
             case 4:
-                if(t2==0)
-                {
-                    tv.setText("Divide by Zero error");
-                    lock=0;
-                    equilock=1;
-                    tv.setText("");
-                    break;
-                }
                 result = t1/t2;
                 temp2 = String.valueOf(result);
                 tv.setText(temp2);
                 lock=0;
                 equilock=1;
                 break;
+        }
+    }
+
+
+
+    protected void check(){
+        lockzero=0;
+        n0.setEnabled(true);
+       if(tv.getText()=="0"){
+           tv.setText("");
+           equilock=1;
+            tv.postInvalidate();
+            tv.invalidate();
+
         }
     }
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +94,14 @@ public class MainActivity extends Activity {
         n0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText() + "0");
             }
         });
         n1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText() + "1");
             }
         });
@@ -106,6 +109,7 @@ public class MainActivity extends Activity {
         n2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText()+"2");
             }
         });
@@ -113,6 +117,7 @@ public class MainActivity extends Activity {
         n3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText()+"3");
             }
         });
@@ -120,6 +125,7 @@ public class MainActivity extends Activity {
         n4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText()+"4");
             }
         });
@@ -127,6 +133,7 @@ public class MainActivity extends Activity {
         n5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText()+"5");
             }
         });
@@ -134,6 +141,7 @@ public class MainActivity extends Activity {
         n6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText()+"6");
             }
         });
@@ -141,6 +149,7 @@ public class MainActivity extends Activity {
         n7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText()+"7");
             }
         });
@@ -148,6 +157,7 @@ public class MainActivity extends Activity {
         n8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText()+"8");
             }
         });
@@ -155,6 +165,7 @@ public class MainActivity extends Activity {
         n9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check();
                 tv.setText(tv.getText()+"9");
             }
         });
@@ -162,13 +173,20 @@ public class MainActivity extends Activity {
         can.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String str = tv.getText().toString();
-                if (str.length() > 1) {
+                if (str.length() ==1) {
+                    tv.setText("0");
+                    if(num1==0 && num2==0)
+                        lock=0;
+                    tv.postInvalidate();
+                    tv.invalidate();
+                }
+                else if (str.length() > 1) {
                     str = str.substring(0, str.length() - 1);
                     tv.setText(str);
+                    tv.invalidate();
                 }
-                else
-                    tv.setText("");
 
             }
         });
@@ -176,31 +194,32 @@ public class MainActivity extends Activity {
         can.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                n0.setEnabled(true);
                 tv.setText("");
                 log.setText("");
-                num1=num2=0;
-                tv.invalidate();
-                v.invalidate();
-                return true;
+                num1 = num2 = 0;
+                lock = 0;
+                equilock = 1;
+                return false;
             }
         });
+
+
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(lock==1)
+                if (lock == 1)
                     tv.setText(tv.getText());
                 else {
                     if (tv.getText() == "")
                         tv.setText("0");
-                        tv.invalidate();
+                    tv.invalidate();
                     v.invalidate();
                     lock = 1;
-                    equilock=0;
+                    equilock = 0;
                     String temp = tv.getText().toString();
-                    if (temp.charAt(0) == 0) {
-                        temp = temp.substring(1, temp.length());
-                    }
+
 
                     num1 = Integer.parseInt(temp);
                     flag = 1;
@@ -214,19 +233,15 @@ public class MainActivity extends Activity {
         sub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(lock==1)
+                if (lock == 1)
                     tv.setText(tv.getText());
                 else {
                     if (tv.getText() == "")
                         tv.setText("0");
                     tv.invalidate();
                     lock = 1;
-                    equilock=0;
+                    equilock = 0;
                     String temp = tv.getText().toString();
-                    if (temp.charAt(0) == 0) {
-                        temp = temp.substring(1, temp.length());
-                    }
-
                     num1 = Integer.parseInt(temp);
                     flag = 2;
                     log.setText(num1 + "-");
@@ -238,19 +253,15 @@ public class MainActivity extends Activity {
         mult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(lock==1)
+                if (lock == 1)
                     tv.setText(tv.getText());
                 else {
                     if (tv.getText() == "")
                         tv.setText("0");
                     tv.invalidate();
                     lock = 1;
-                    equilock=0;
+                    equilock = 0;
                     String temp = tv.getText().toString();
-                    if (temp.charAt(0) == 0) {
-                        temp = temp.substring(1, temp.length());
-                    }
-
                     num1 = Integer.parseInt(temp);
                     flag = 3;
                     log.setText(num1 + "*");
@@ -262,19 +273,17 @@ public class MainActivity extends Activity {
         div.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(lock==1)
+                num2 = 1;
+                n0.setEnabled(false);
+                if (lock == 1)
                     tv.setText(tv.getText());
                 else {
                     if (tv.getText() == "")
                         num1 = 0;
                     tv.invalidate();
                     lock = 1;
-                    equilock=0;
+                    equilock = 0;
                     String temp = tv.getText().toString();
-                    if (temp.charAt(0) == 0) {
-                        temp = temp.substring(1, temp.length());
-                    }
-
                     num1 = Integer.parseInt(temp);
                     flag = 4;
                     log.setText(num1 + "/");
@@ -286,34 +295,33 @@ public class MainActivity extends Activity {
         equ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    n0.setEnabled(true);
                     if(equilock==1)
                     {
                         tv.setText(tv.getText());
                     }
                     else {
                         if (tv.getText() == "")
-                            tv.setText("0");
+                                tv.setText("0");
                         String temp = tv.getText().toString();
                         tv.setText("");
-                        if (temp.charAt(0) == 0) {
-                            temp = temp.substring(1, temp.length());
-                        }
                         num2 = Integer.parseInt(temp);
-                        log.setText(log.getText() + temp);
-                        calculate(num1, num2, flag);
+                        if(flag==4 && num2==0) {
+                            num2 = 1;
+                            log.setText(log.getText() + "1");
+                        }
+                        else
+                        {
+                            log.setText(log.getText() + temp);
+
+                        }
+                        calculate(num1,num2,flag);
                         log.setText(log.getText() + "= " + temp2);
+
                     }
                 }
 
         });
-
-
-
-
-
-
-
-
 
 
     }
